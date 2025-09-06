@@ -22,6 +22,27 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // TODO: Replace with live API call when available
+      // const response = await fetch('/api/auth/login', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     email,
+      //     password
+      //   })
+      // });
+      // const data = await response.json();
+      // if (response.ok) {
+      //   localStorage.setItem('authToken', data.token);
+      //   localStorage.setItem('userId', data.user.id);
+      //   login(data.userData);
+      // } else {
+      //   setError(data.error || 'Login failed');
+      // }
+      
+      // Using mock API for now
       const response = await loginUser(email, password);
       if (response.success) {
         login(response.userData);

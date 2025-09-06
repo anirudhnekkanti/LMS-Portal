@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { ChevronDown, ChevronRight, CheckCircle } from 'lucide-react';
 import { getLearningPlan } from '../../api';
+import CourseDetailView from './CourseDetailView';
+import QuizView from './QuizView';
 
 interface LearningPlan {
   title: string;
@@ -13,11 +15,37 @@ const ContentLibraryView: React.FC = () => {
   const [learningPlan, setLearningPlan] = useState<LearningPlan[]>(contextPlan || []);
   const [expandedSections, setExpandedSections] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(!contextPlan);
+  const [currentView, setCurrentView] = useState<'library' | 'course' | 'quiz'>('library');
+  const [selectedCourseId, setSelectedCourseId] = useState<string>('');
 
   useEffect(() => {
     if (!contextPlan) {
       const fetchLearningPlan = async () => {
         try {
+          // TODO: Replace with live API call when available
+          // TODO: Filter content based on user info (experience, tech stack, expected role)
+          // const userInfo = user?.onboardingData;
+          // const queryParams = new URLSearchParams({
+          //   experience: userInfo?.yearsExperience?.toString() || '0',
+          //   techStack: userInfo?.currentTechStack || '',
+          //   role: userInfo?.desiredTechStack || ''
+          // });
+          // const response = await fetch('/api/content', {
+          //   method: 'GET',
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          //   }
+          // });
+          // const data = await response.json();
+          // if (response.ok) {
+          //   // Content will be personalized based on user info
+          //   setLearningPlan(data.learningPlan);
+          // } else {
+          //   console.error('Failed to fetch learning plan:', data.error);
+          // }
+          
+          // Using mock API for now
           const response = await getLearningPlan();
           if (response.success) {
             setLearningPlan(response.plan);
@@ -41,6 +69,47 @@ const ContentLibraryView: React.FC = () => {
     );
   };
 
+  const handleWeekClick = (weekIndex: number) => {
+    // Generate a course ID based on the week
+    const courseId = `week${weekIndex + 1}-${learningPlan[weekIndex].title.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+    setSelectedCourseId(courseId);
+    setCurrentView('course');
+  };
+
+  const handleCourseComplete = () => {
+    setCurrentView('quiz');
+  };
+
+  const handleQuizComplete = (score: number, passed: boolean) => {
+    // TODO: Save quiz results to backend
+    console.log(`Quiz completed with score: ${score}%, passed: ${passed}`);
+    setCurrentView('library');
+  };
+
+  const handleBackToLibrary = () => {
+    setCurrentView('library');
+  };
+
+  // Render different views based on current state
+  if (currentView === 'course') {
+    return (
+      <CourseDetailView
+        courseId={selectedCourseId}
+        onBack={handleBackToLibrary}
+        onComplete={handleCourseComplete}
+      />
+    );
+  }
+
+  if (currentView === 'quiz') {
+    return (
+      <QuizView
+        courseId={selectedCourseId}
+        onBack={handleBackToLibrary}
+        onComplete={handleQuizComplete}
+      />
+    );
+  }
   if (isLoading) {
     return (
       <div className="py-6">
@@ -116,10 +185,12 @@ const ContentLibraryView: React.FC = () => {
             {learningPlan.map((week, index) => (
               <div key={index} className="p-6">
                 <div
-                  className="flex items-center justify-between cursor-pointer"
-                  onClick={() => toggleSection(index)}
+                  className="flex items-center justify-between"
                 >
-                  <div className="flex items-center">
+                  <div 
+                    className="flex items-center cursor-pointer flex-1"
+                    onClick={() => toggleSection(index)}
+                  >
                     {expandedSections.includes(index) ? (
                       <ChevronDown className="h-5 w-5 text-gray-400 mr-3" />
                     ) : (
@@ -127,7 +198,15 @@ const ContentLibraryView: React.FC = () => {
                     )}
                     <h3 className="text-white font-medium">{week.title}</h3>
                   </div>
-                  <span className="text-gray-400 text-sm">{week.tasks.length} tasks</span>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-gray-400 text-sm">{week.tasks.length} tasks</span>
+                    <button
+                      onClick={() => handleWeekClick(index)}
+                      className="bg-lime-500 hover:bg-lime-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Start Week
+                    </button>
+                  </div>
                 </div>
 
                 {expandedSections.includes(index) && (

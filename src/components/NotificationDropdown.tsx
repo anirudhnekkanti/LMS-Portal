@@ -19,6 +19,22 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ onClose }) 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
+        // TODO: Replace with live API call when available
+        // const response = await fetch('/api/notifications', {
+        //   method: 'GET',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        //   }
+        // });
+        // const data = await response.json();
+        // if (response.ok) {
+        //   setNotifications(data.notifications);
+        // } else {
+        //   console.error('Failed to fetch notifications:', data.error);
+        // }
+        
+        // Using mock API for now
         const response = await getNotifications();
         if (response.success) {
           setNotifications(response.notifications);
@@ -35,6 +51,21 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ onClose }) 
 
   const handleMarkAsRead = async (notificationId: number) => {
     try {
+      // TODO: Replace with live API call when available
+      // const response = await fetch(`/api/notifications/${notificationId}/read`, {
+      //   method: 'PATCH',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+      //   }
+      // });
+      // if (!response.ok) {
+      //   const data = await response.json();
+      //   console.error('Failed to mark notification as read:', data.error);
+      //   return;
+      // }
+      
+      // Using mock API for now
       await markNotificationAsRead(notificationId);
       setNotifications(prev =>
         prev.map(notif =>

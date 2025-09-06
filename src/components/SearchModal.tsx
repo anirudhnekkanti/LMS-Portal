@@ -29,6 +29,23 @@ const SearchModal: React.FC<SearchModalProps> = ({ onClose }) => {
 
       setIsLoading(true);
       try {
+        // TODO: Replace with live API call when available
+        // const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+        //   method: 'GET',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        //   }
+        // });
+        // const data = await response.json();
+        // if (response.ok) {
+        //   setResults(data.courses);
+        // } else {
+        //   console.error('Failed to search courses:', data.error);
+        //   setResults([]);
+        // }
+        
+        // Using mock API for now
         const response = await searchCourses(query);
         if (response.success) {
           setResults(response.courses);

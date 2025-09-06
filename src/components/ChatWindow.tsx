@@ -50,6 +50,33 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onClose }) => {
     setIsLoading(true);
 
     try {
+      // TODO: Replace with live API call when available
+      // const response = await fetch('/api/chat', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+      //   },
+      //   body: JSON.stringify({
+      //     message: inputMessage,
+      //     userId: localStorage.getItem('userId'),
+      //     timestamp: new Date().toISOString()
+      //   })
+      // });
+      // const data = await response.json();
+      // if (response.ok) {
+      //   const aiMessage: Message = {
+      //     id: Date.now() + 1,
+      //     text: data.response,
+      //     isUser: false,
+      //     timestamp: new Date().toLocaleTimeString()
+      //   };
+      //   setMessages(prev => [...prev, aiMessage]);
+      // } else {
+      //   console.error('Failed to send chat message:', data.error);
+      // }
+      
+      // Using mock API for now
       const response = await postChatMessage(inputMessage);
       if (response.success) {
         const aiMessage: Message = {

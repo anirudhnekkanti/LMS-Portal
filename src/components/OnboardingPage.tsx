@@ -21,6 +21,26 @@ const OnboardingPage: React.FC = () => {
     };
 
     try {
+      // TODO: Replace with live API call when available
+      // const response = await fetch('/api/onboarding', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+      //   },
+      //   body: JSON.stringify({
+      //     userId: localStorage.getItem('userId'),
+      //     ...onboardingData
+      //   })
+      // });
+      // const data = await response.json();
+      // if (response.ok) {
+      //   completeOnboarding(onboardingData, data.learningPlan);
+      // } else {
+      //   console.error('Failed to submit onboarding:', data.error);
+      // }
+      
+      // Using mock API for now
       const response = await submitOnboarding(onboardingData);
       if (response.success) {
         completeOnboarding(onboardingData, response.learningPlan);

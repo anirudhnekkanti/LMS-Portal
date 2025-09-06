@@ -157,7 +157,7 @@ const DUMMY_USER = {
   email: 'user@example.com',
   name: 'John Doe',
   initials: 'JD',
-  isNew: false,
+  hasCompletedUserInfo: true,
   progress: {
     completed: 12,
     total: 20,
@@ -175,7 +175,7 @@ const DUMMY_NEW_USER = {
   email: 'newuser@example.com',
   name: 'Jane Smith',
   initials: 'JS',
-  isNew: true,
+  hasCompletedUserInfo: false,
   progress: {
     completed: 0,
     total: 20,
@@ -193,14 +193,12 @@ export const loginUser = async (email, password) => {
       // Existing user with onboarding data
       return {
         success: true,
-        isNew: false,
         userData: DUMMY_USER
       };
     } else if (email === 'newuser@example.com') {
-      // New user without onboarding data
+      // New user without user info
       return {
         success: true,
-        isNew: true,
         userData: DUMMY_NEW_USER
       };
     }
@@ -321,5 +319,96 @@ export const getLearningPlan = async () => {
   return {
     success: true,
     plan: mockLearningPlan
+  };
+};
+
+// Course detail functions
+export const getCourseDetail = async (courseId) => {
+  await delay(800);
+  
+  // Mock course detail based on courseId
+  const mockCourseDetail = {
+    id: courseId,
+    title: 'Week 1: Mastering Advanced React Hooks',
+    description: 'Deep dive into advanced React hooks patterns and best practices.',
+    totalDuration: '4 hours 30 minutes',
+    difficulty: 'Intermediate',
+    contents: [
+      { id: 1, title: 'Introduction to Advanced Hooks', type: 'video', duration: '15 min', completed: false },
+      { id: 2, title: 'Understanding useEffect Dependencies', type: 'video', duration: '25 min', completed: false },
+      { id: 3, title: 'Building Custom Hooks', type: 'video', duration: '35 min', completed: false }
+    ]
+  };
+  
+  return {
+    success: true,
+    courseDetail: mockCourseDetail,
+    completedItems: []
+  };
+};
+
+// Quiz functions
+export const getQuizData = async (courseId) => {
+  await delay(600);
+  
+  const mockQuiz = {
+    id: `${courseId}-quiz`,
+    title: 'React Hooks Mastery Quiz',
+    description: 'Test your understanding of advanced React hooks concepts',
+    passingScore: 70,
+    questions: [
+      {
+        id: 1,
+        question: 'When should you use useReducer instead of useState?',
+        options: [
+          'When you have simple state updates',
+          'When you have complex state logic with multiple sub-values',
+          'When you want to optimize performance',
+          'When you need to share state between components'
+        ],
+        correctAnswer: 1,
+        explanation: 'useReducer is preferable when you have complex state logic that involves multiple sub-values.'
+      },
+      {
+        id: 2,
+        question: 'What is the main purpose of the dependency array in useEffect?',
+        options: [
+          'To prevent memory leaks',
+          'To control when the effect should run',
+          'To optimize component rendering',
+          'To handle async operations'
+        ],
+        correctAnswer: 1,
+        explanation: 'The dependency array controls when the effect should run based on value changes.'
+      },
+      {
+        id: 3,
+        question: 'Which hook would you use to memoize an expensive calculation?',
+        options: [
+          'useCallback',
+          'useEffect',
+          'useMemo',
+          'useReducer'
+        ],
+        correctAnswer: 2,
+        explanation: 'useMemo is used to memoize expensive calculations and optimize performance.'
+      }
+    ]
+  };
+  
+  return {
+    success: true,
+    quiz: mockQuiz
+  };
+};
+
+export const submitQuizAnswers = async (courseId, answers) => {
+  await delay(1000);
+  
+  return {
+    success: true,
+    score: 85,
+    passed: true,
+    results: answers
   };
 };

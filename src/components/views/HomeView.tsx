@@ -19,6 +19,22 @@ const HomeView: React.FC = () => {
       if (!user) return;
       
       try {
+        // TODO: Replace with live API call when available
+        // const response = await fetch(`/api/progress/${user.id}`, {
+        //   method: 'GET',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        //   }
+        // });
+        // const data = await response.json();
+        // if (response.ok) {
+        //   setProgress(data.progress);
+        // } else {
+        //   console.error('Failed to fetch progress:', data.error);
+        // }
+        
+        // Using mock API for now
         const response = await getUserProgress(user.id);
         if (response.success) {
           setProgress(response.progress);

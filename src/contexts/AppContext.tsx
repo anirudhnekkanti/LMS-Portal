@@ -5,6 +5,7 @@ interface User {
   email: string;
   name: string;
   initials: string;
+  hasCompletedUserInfo?: boolean;
   progress?: {
     completed: number;
     total: number;
@@ -23,6 +24,12 @@ interface OnboardingData {
   desiredTechStack: string;
 }
 
+interface UserInfoData {
+  experienceYears: number;
+  currentTechStack: string;
+  expectedRole: string;
+}
+
 interface LearningPlan {
   title: string;
   tasks: string[];
@@ -36,6 +43,7 @@ interface AppContextType {
   login: (userData: User) => void;
   logout: () => void;
   completeOnboarding: (data: OnboardingData, plan: LearningPlan[]) => void;
+  completeUserInfo: (data: UserInfoData) => void;
   setCurrentView: (view: string) => void;
 }
 
@@ -72,10 +80,25 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     if (user) {
       setUser({
         ...user,
-        onboardingData: data
+        onboardingData: data,
+        hasCompletedUserInfo: true
       });
     }
     setLearningPlan(plan);
+  };
+
+  const completeUserInfo = (data: UserInfoData) => {
+    if (user) {
+      setUser({
+        ...user,
+        hasCompletedUserInfo: true,
+        onboardingData: {
+          yearsExperience: data.experienceYears,
+          currentTechStack: data.currentTechStack,
+          desiredTechStack: data.expectedRole
+        }
+      });
+    }
   };
 
   const value = {
@@ -86,6 +109,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     login,
     logout,
     completeOnboarding,
+    completeUserInfo,
     setCurrentView,
   };
 
