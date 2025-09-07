@@ -13,7 +13,7 @@ const UserInfoForm: React.FC = () => {
   const [currentTechStack, setCurrentTechStack] = useState('');
   const [expectedRole, setExpectedRole] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { user, completeUserInfo } = useApp();
+  const { user, completeUserInfo, setLearningPlan } = useApp();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,30 +26,62 @@ const UserInfoForm: React.FC = () => {
     };
 
     try {
-      // TODO: Replace with live API call when available
-      // const response = await fetch('/api/user-info', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      //   },
-      //   body: JSON.stringify({
-      //     userId: localStorage.getItem('userId'),
-      //     ...userInfoData
-      //   })
-      // });
-      // const data = await response.json();
-      // if (response.ok) {
-      //   completeUserInfo(userInfoData);
-      // } else {
-      //   console.error('Failed to submit user info:', data.error);
-      // }
+      // Call the live API to generate personalized content
+      const response = await fetch('http://127.0.0.1:5000/api/courses/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          experience: `${experienceYears} years`,
+          techStack: currentTechStack,
+          expectedRole: expectedRole
+        })
+      });
       
-      // Using mock data for now - simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      completeUserInfo(userInfoData);
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Transform the API response to match our learning plan format
+        const transformedPlan = data.content.map((week: any) => ({
+          title: week.title,
+          tasks: week.tasks.map((task: any) => task.title)
+        }));
+        
+        // Update the learning plan with the API response
+        setLearningPlan(transformedPlan);
+        
+        // Complete user info
+        completeUserInfo(userInfoData);
+      } else {
+        console.error('Failed to generate learning plan:', data.error);
+        // Fallback to completing user info without custom plan
+        completeUserInfo(userInfoData);
+      }
     } catch (error) {
       console.error('Error submitting user info:', error);
+      // Fallback to mock data if API fails
+      const mockLearningPlan = [
+        {
+          title: "Week 1: Mastering Advanced React Hooks",
+          tasks: [
+            { id: "react-hooks-deps", title: "Understand useEffect dependencies", completed: false },
+            { id: "react-hooks-reducer", title: "Master the use of useReducer", completed: false },
+            { id: "react-hooks-custom", title: "Create custom hooks for reusable logic", completed: false }
+          ]
+        },
+        {
+          title: "Week 2: Introduction to AWS Lambda",
+          tasks: [
+            { id: "lambda-setup", title: "Set up your first Lambda function", completed: false },
+            { id: "lambda-api-gateway", title: "Connect Lambda to an API Gateway", completed: false },
+            { id: "lambda-iam", title: "Manage permissions with IAM roles", completed: false }
+          ]
+        }
+      ];
+      
+      setLearningPlan(mockLearningPlan);
+      completeUserInfo(userInfoData);
     } finally {
       setIsLoading(false);
     }

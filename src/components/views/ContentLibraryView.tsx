@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../contexts/AppContext';
 import { ChevronDown, ChevronRight, CheckCircle } from 'lucide-react';
 import { getLearningPlan } from '../../api';
-import CourseDetailView from './CourseDetailView';
+import TopicDetailView from './TopicDetailView';
 import QuizView from './QuizView';
 
 interface LearningPlan {
@@ -15,8 +15,8 @@ const ContentLibraryView: React.FC = () => {
   const [learningPlan, setLearningPlan] = useState<LearningPlan[]>(contextPlan || []);
   const [expandedSections, setExpandedSections] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(!contextPlan);
-  const [currentView, setCurrentView] = useState<'library' | 'course' | 'quiz'>('library');
-  const [selectedCourseId, setSelectedCourseId] = useState<string>('');
+  const [currentView, setCurrentView] = useState<'library' | 'topic' | 'quiz'>('library');
+  const [selectedTopic, setSelectedTopic] = useState<{courseTitle: string, topicTitle: string}>({courseTitle: '', topicTitle: ''});
 
   useEffect(() => {
     if (!contextPlan) {
@@ -69,14 +69,12 @@ const ContentLibraryView: React.FC = () => {
     );
   };
 
-  const handleWeekClick = (weekIndex: number) => {
-    // Generate a course ID based on the week
-    const courseId = `week${weekIndex + 1}-${learningPlan[weekIndex].title.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
-    setSelectedCourseId(courseId);
-    setCurrentView('course');
+  const handleTaskClick = (courseTitle: string, topicTitle: string) => {
+    setSelectedTopic({ courseTitle, topicTitle });
+    setCurrentView('topic');
   };
 
-  const handleCourseComplete = () => {
+  const handleTopicComplete = () => {
     setCurrentView('quiz');
   };
 
@@ -91,12 +89,13 @@ const ContentLibraryView: React.FC = () => {
   };
 
   // Render different views based on current state
-  if (currentView === 'course') {
+  if (currentView === 'topic') {
     return (
-      <CourseDetailView
-        courseId={selectedCourseId}
+      <TopicDetailView
+        courseTitle={selectedTopic.courseTitle}
+        topicTitle={selectedTopic.topicTitle}
         onBack={handleBackToLibrary}
-        onComplete={handleCourseComplete}
+        onComplete={handleTopicComplete}
       />
     );
   }
@@ -104,7 +103,8 @@ const ContentLibraryView: React.FC = () => {
   if (currentView === 'quiz') {
     return (
       <QuizView
-        courseId={selectedCourseId}
+        courseTitle={selectedTopic.courseTitle}
+        topicTitle={selectedTopic.topicTitle}
         onBack={handleBackToLibrary}
         onComplete={handleQuizComplete}
       />
@@ -212,9 +212,13 @@ const ContentLibraryView: React.FC = () => {
                 {expandedSections.includes(index) && (
                   <div className="mt-4 ml-8 space-y-3">
                     {week.tasks.map((task, taskIndex) => (
-                      <div key={taskIndex} className="flex items-center">
+                      <div 
+                        key={taskIndex} 
+                        className="flex items-center cursor-pointer hover:bg-gray-700 p-2 rounded transition-colors"
+                        onClick={() => handleTaskClick(week.title, task)}
+                      >
                         <CheckCircle className="h-5 w-5 text-gray-600 mr-3 flex-shrink-0" />
-                        <span className="text-gray-300">{task}</span>
+                        <span className="text-gray-300 hover:text-lime-500 transition-colors">{task}</span>
                       </div>
                     ))}
                   </div>

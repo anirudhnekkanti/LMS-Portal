@@ -50,45 +50,48 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onClose }) => {
     setIsLoading(true);
 
     try {
-      // TODO: Replace with live API call when available
-      // const response = await fetch('/api/chat', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      //   },
-      //   body: JSON.stringify({
-      //     message: inputMessage,
-      //     userId: localStorage.getItem('userId'),
-      //     timestamp: new Date().toISOString()
-      //   })
-      // });
-      // const data = await response.json();
-      // if (response.ok) {
-      //   const aiMessage: Message = {
-      //     id: Date.now() + 1,
-      //     text: data.response,
-      //     isUser: false,
-      //     timestamp: new Date().toLocaleTimeString()
-      //   };
-      //   setMessages(prev => [...prev, aiMessage]);
-      // } else {
-      //   console.error('Failed to send chat message:', data.error);
-      // }
+      // Call the live chatbot API
+      const response = await fetch('http://127.0.0.1:5000/api/chatbot/query', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          query: inputMessage
+        })
+      });
       
-      // Using mock API for now
-      const response = await postChatMessage(inputMessage);
-      if (response.success) {
+      const data = await response.json();
+      
+      if (response.ok) {
         const aiMessage: Message = {
           id: Date.now() + 1,
-          text: response.response,
+          text: data.answer,
           isUser: false,
           timestamp: new Date().toLocaleTimeString()
         };
         setMessages(prev => [...prev, aiMessage]);
+      } else {
+        console.error('Failed to send chat message:', data.error);
+        // Fallback to a generic error message
+        const errorMessage: Message = {
+          id: Date.now() + 1,
+          text: "I'm sorry, I'm having trouble responding right now. Please try again later.",
+          isUser: false,
+          timestamp: new Date().toLocaleTimeString()
+        };
+        setMessages(prev => [...prev, errorMessage]);
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      // Fallback to a generic error message
+      const errorMessage: Message = {
+        id: Date.now() + 1,
+        text: "I'm sorry, I'm having trouble responding right now. Please try again later.",
+        isUser: false,
+        timestamp: new Date().toLocaleTimeString()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }

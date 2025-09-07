@@ -45,6 +45,7 @@ interface AppContextType {
   completeOnboarding: (data: OnboardingData, plan: LearningPlan[]) => void;
   completeUserInfo: (data: UserInfoData) => void;
   setCurrentView: (view: string) => void;
+  setLearningPlan: (plan: LearningPlan[]) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -111,6 +112,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     completeOnboarding,
     completeUserInfo,
     setCurrentView,
+    setLearningPlan,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

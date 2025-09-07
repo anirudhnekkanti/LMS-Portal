@@ -18,58 +18,13 @@ interface QuizData {
 }
 
 interface QuizViewProps {
-  courseId: string;
+  courseTitle: string;
+  topicTitle: string;
   onBack: () => void;
   onComplete: (score: number, passed: boolean) => void;
 }
 
-// Mock quiz data
-const mockQuizData: QuizData = {
-  id: 'week1-react-hooks-quiz',
-  title: 'React Hooks Mastery Quiz',
-  description: 'Test your understanding of advanced React hooks concepts',
-  passingScore: 70,
-  questions: [
-    {
-      id: 1,
-      question: 'When should you use useReducer instead of useState?',
-      options: [
-        'When you have simple state updates',
-        'When you have complex state logic with multiple sub-values',
-        'When you want to optimize performance',
-        'When you need to share state between components'
-      ],
-      correctAnswer: 1,
-      explanation: 'useReducer is preferable when you have complex state logic that involves multiple sub-values or when the next state depends on the previous one.'
-    },
-    {
-      id: 2,
-      question: 'What is the main purpose of the dependency array in useEffect?',
-      options: [
-        'To prevent memory leaks',
-        'To control when the effect should run',
-        'To optimize component rendering',
-        'To handle async operations'
-      ],
-      correctAnswer: 1,
-      explanation: 'The dependency array controls when the effect should run. The effect only runs when one of the dependencies has changed between renders.'
-    },
-    {
-      id: 3,
-      question: 'Which hook would you use to memoize an expensive calculation?',
-      options: [
-        'useCallback',
-        'useEffect',
-        'useMemo',
-        'useReducer'
-      ],
-      correctAnswer: 2,
-      explanation: 'useMemo is used to memoize expensive calculations and only recalculates when its dependencies change, helping to optimize performance.'
-    }
-  ]
-};
-
-const QuizView: React.FC<QuizViewProps> = ({ courseId, onBack, onComplete }) => {
+const QuizView: React.FC<QuizViewProps> = ({ courseTitle, topicTitle, onBack, onComplete }) => {
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
@@ -79,25 +34,41 @@ const QuizView: React.FC<QuizViewProps> = ({ courseId, onBack, onComplete }) => 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        // TODO: Replace with live API call when available
-        // const response = await fetch(`/api/courses/${courseId}/quiz`, {
-        //   method: 'GET',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        //   }
-        // });
-        // const data = await response.json();
-        // if (response.ok) {
-        //   setQuizData(data.quiz);
-        // } else {
-        //   console.error('Failed to fetch quiz data:', data.error);
-        // }
+        // Call the live API to get quiz questions
+        const response = await fetch('http://127.0.0.1:5000/api/quiz/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            courseTitle: courseTitle,
+            topicTitle: topicTitle
+          })
+        });
         
-        // Using mock data for now
-        await new Promise(resolve => setTimeout(resolve, 600));
-        setQuizData(mockQuizData);
-        setSelectedAnswers(new Array(mockQuizData.questions.length).fill(-1));
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Transform API response to match our QuizData interface
+          const transformedQuiz: QuizData = {
+            id: `${courseTitle}-${topicTitle}`.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+            title: `${topicTitle} Quiz`,
+            description: `Test your understanding of ${topicTitle}`,
+            passingScore: 70,
+            questions: data.questions.map((q: any, index: number) => ({
+              id: index + 1,
+              question: q.question,
+              options: q.options,
+              correctAnswer: q.options.indexOf(q.answer),
+              explanation: `The correct answer is: ${q.answer}`
+            }))
+          };
+          
+          setQuizData(transformedQuiz);
+          setSelectedAnswers(new Array(transformedQuiz.questions.length).fill(-1));
+        } else {
+          console.error('Failed to fetch quiz data:', data.error);
+        }
       } catch (error) {
         console.error('Error fetching quiz data:', error);
       } finally {
@@ -106,7 +77,7 @@ const QuizView: React.FC<QuizViewProps> = ({ courseId, onBack, onComplete }) => 
     };
 
     fetchQuizData();
-  }, [courseId]);
+  }, [courseTitle, topicTitle]);
 
   const handleAnswerSelect = (answerIndex: number) => {
     const newAnswers = [...selectedAnswers];
@@ -130,27 +101,8 @@ const QuizView: React.FC<QuizViewProps> = ({ courseId, onBack, onComplete }) => 
     if (!quizData) return;
 
     try {
-      // TODO: Replace with live API call when available
-      // const response = await fetch(`/api/courses/${courseId}/quiz/submit`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      //   },
-      //   body: JSON.stringify({
-      //     answers: selectedAnswers,
-      //     userId: localStorage.getItem('userId'),
-      //     timestamp: new Date().toISOString()
-      //   })
-      // });
-      // const data = await response.json();
-      // if (response.ok) {
-      //   setShowResults(true);
-      // } else {
-      //   console.error('Failed to submit quiz:', data.error);
-      // }
-      
-      // Using mock submission for now
+      // For now, we'll validate answers locally since the API provides the correct answers
+      // In the future, you might want to submit answers to the backend for validation
       await new Promise(resolve => setTimeout(resolve, 1000));
       setShowResults(true);
     } catch (error) {
