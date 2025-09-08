@@ -3,8 +3,12 @@ import { ArrowLeft, ExternalLink } from 'lucide-react';
 
 interface TopicContent {
   title: string;
-  explanation: string;
-  links: Array<{
+  description: string;
+  sections: Array<{
+    title: string;
+    content: string;
+  }>;
+  external_links: Array<{
     title: string;
     url: string;
   }>;
@@ -45,7 +49,15 @@ const TopicDetailView: React.FC<TopicDetailViewProps> = ({
         const data = await response.json();
         
         if (response.ok) {
-          setTopicContent(data);
+          // Transform API response to match our interface
+          const transformedContent: TopicContent = {
+            title: data.content.title,
+            description: data.content.description,
+            sections: data.content.sections || [],
+            external_links: data.content.external_links || [],
+            quizAvailable: data.quizAvailable
+          };
+          setTopicContent(transformedContent);
         } else {
           console.error('Failed to fetch topic content:', data.error);
         }
@@ -115,29 +127,41 @@ const TopicDetailView: React.FC<TopicDetailViewProps> = ({
         </div>
 
         {/* Content */}
-        <div className="bg-gray-800 rounded-lg p-8 mb-6 border border-gray-700">
-          <div className="prose prose-invert max-w-none">
-            <div 
-              className="text-gray-300 leading-relaxed whitespace-pre-wrap"
-              style={{ lineHeight: '1.8' }}
-            >
-              {topicContent.explanation}
+        <div className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+          <h2 className="text-xl font-semibold text-white mb-4">Overview</h2>
+          <p className="text-gray-300 leading-relaxed mb-6" style={{ lineHeight: '1.8' }}>
+            {topicContent.description}
+          </p>
+
+          {/* Sections */}
+          {topicContent.sections && topicContent.sections.length > 0 && (
+            <div className="space-y-6">
+              {topicContent.sections.map((section, index) => (
+                <div key={index} className="border-l-4 border-lime-500 pl-6">
+                  <h3 className="text-lg font-semibold text-white mb-3">
+                    {section.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed" style={{ lineHeight: '1.8' }}>
+                    {section.content}
+                  </p>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Links Section */}
-        {topicContent.links && topicContent.links.length > 0 && (
+        {/* External Links Section */}
+        {topicContent.external_links && topicContent.external_links.length > 0 && (
           <div className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
-            <h2 className="text-lg font-semibold text-white mb-4">Additional Resources</h2>
+            <h2 className="text-lg font-semibold text-white mb-4">External Resources</h2>
             <div className="space-y-3">
-              {topicContent.links.map((link, index) => (
+              {topicContent.external_links.map((link, index) => (
                 <a
                   key={index}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors group"
+                  className="flex items-center p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors group"
                 >
                   <ExternalLink className="h-5 w-5 text-lime-500 mr-3 flex-shrink-0" />
                   <span className="text-white group-hover:text-lime-500 transition-colors">
