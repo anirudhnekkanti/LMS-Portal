@@ -129,7 +129,7 @@ const UserInfoForm: React.FC = () => {
 
           <div>
             <label htmlFor="currentTech" className="block text-sm font-medium text-gray-300 mb-3">
-              Current Experience with Technologies
+              Current Experience - Technologies
             </label>
             <textarea
               id="currentTech"
