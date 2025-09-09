@@ -18,7 +18,7 @@ const UserInfoForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     const userInfoData: UserInfoData = {
       experienceYears,
       currentTechStack,
@@ -38,19 +38,19 @@ const UserInfoForm: React.FC = () => {
           expectedRole: expectedRole
         })
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
         // Transform the API response to match our learning plan format
         const transformedPlan = data.content.map((week: any) => ({
           title: week.title,
           tasks: week.tasks.map((task: any) => task.title)
         }));
-        
+
         // Update the learning plan with the API response
         setLearningPlan(transformedPlan);
-        
+
         // Complete user info
         completeUserInfo(userInfoData);
       } else {
@@ -79,7 +79,7 @@ const UserInfoForm: React.FC = () => {
           ]
         }
       ];
-      
+
       setLearningPlan(mockLearningPlan);
       completeUserInfo(userInfoData);
     } finally {
@@ -129,7 +129,7 @@ const UserInfoForm: React.FC = () => {
 
           <div>
             <label htmlFor="currentTech" className="block text-sm font-medium text-gray-300 mb-3">
-              Current Tech Stack
+              Current Experience with Technologies
             </label>
             <textarea
               id="currentTech"
@@ -143,7 +143,7 @@ const UserInfoForm: React.FC = () => {
 
           <div>
             <label htmlFor="expectedRole" className="block text-sm font-medium text-gray-300 mb-3">
-              Expected Role
+              Joining Role
             </label>
             <input
               type="text"
@@ -161,7 +161,7 @@ const UserInfoForm: React.FC = () => {
             disabled={isLoading}
             className="w-full bg-lime-500 hover:bg-lime-600 disabled:bg-lime-300 text-white font-medium py-4 px-6 rounded-full transition-colors duration-200 text-lg"
           >
-            {isLoading ? 'Setting up your profile...' : 'Complete Setup'}
+            {isLoading ? 'Setting up your profile...' : 'Create My Personalized Plan'}
           </button>
         </form>
 

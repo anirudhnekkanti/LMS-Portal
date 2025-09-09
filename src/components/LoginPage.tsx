@@ -41,7 +41,7 @@ const LoginPage: React.FC = () => {
       // } else {
       //   setError(data.error || 'Login failed');
       // }
-      
+
       // Using mock API for now
       const response = await loginUser(email, password);
       if (response.success) {
@@ -168,7 +168,7 @@ const LoginPage: React.FC = () => {
               </a>
               <div className="mt-2 text-xs text-gray-500">
                 Try: user@example.com / password123 (existing user)<br />
-                Or: newuser@example.com / password123 (new user)
+                Or: anirudh@example.com / password123 (new user)
               </div>
             </div>
           </>

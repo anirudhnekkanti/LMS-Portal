@@ -23,9 +23,8 @@ const DashboardPage: React.FC = () => {
 
   const navigationItems = [
     { id: 'home', label: 'Home' },
-    { id: 'content-library', label: 'Content Library' },
-    { id: 'technical-courses', label: 'Technical Courses' },
-    { id: 'security-training', label: 'Security Training' },
+    { id: 'personalized-learning', label: 'Personalized Learning' },
+    { id: 'assigned-learning', label: 'Assigned Learning' },
     { id: 'leaderboard', label: 'Leaderboard' }
   ];
 
@@ -33,16 +32,14 @@ const DashboardPage: React.FC = () => {
     switch (currentView) {
       case 'home':
         return <HomeView />;
-      case 'content-library':
+      case 'personalized-learning':
         return <ContentLibraryView />;
-      case 'technical-courses':
-        return <TechnicalCoursesView />;
-      case 'security-training':
-        return <SecurityTrainingView />;
+      case 'assigned-learning':
+        return <ContentLibraryView />;
       case 'leaderboard':
         return <LeaderboardView />;
       default:
-        return <HomeView />;
+        return <ContentLibraryView />;
     }
   };
 
@@ -53,18 +50,12 @@ const DashboardPage: React.FC = () => {
         <div className="flex-1 flex flex-col min-h-0 bg-gray-800 border-r border-gray-700">
           <div className="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900">
             <div className="flex items-center">
-              <div className="grid grid-cols-3 gap-1">
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-                <div className="w-2 h-2 bg-lime-500 rounded-sm"></div>
-              </div>
-              <span className="ml-3 text-white font-bold">Outskill</span>
+              <img
+                src="src/util/syfAgent logo.png"
+                alt="syfAgent Logo"
+                className="w-8 h-8 rounded-lg object-cover"
+              />
+              <span className="ml-3 text-white font-bold">syfAgent</span>
             </div>
           </div>
           <div className="flex-1 flex flex-col overflow-y-auto">
@@ -76,11 +67,10 @@ const DashboardPage: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => setCurrentView(item.id)}
-                  className={`w-full text-left group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                    currentView === item.id
-                      ? 'bg-gray-700 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                  }`}
+                  className={`w-full text-left group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${currentView === item.id
+                    ? 'bg-gray-700 text-white'
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    }`}
                 >
                   {item.label}
                 </button>
@@ -101,11 +91,10 @@ const DashboardPage: React.FC = () => {
                   <button
                     key={item.id}
                     onClick={() => setCurrentView(item.id)}
-                    className={`px-3 py-2 text-sm font-medium transition-colors ${
-                      currentView === item.id
-                        ? 'text-white'
-                        : 'text-gray-300 hover:text-white'
-                    }`}
+                    className={`px-3 py-2 text-sm font-medium transition-colors ${currentView === item.id
+                      ? 'text-white'
+                      : 'text-gray-300 hover:text-white'
+                      }`}
                   >
                     {item.label}
                   </button>
@@ -113,14 +102,14 @@ const DashboardPage: React.FC = () => {
               </nav>
             </div>
             <div className="ml-4 flex items-center md:ml-6 space-x-4">
-              <button 
+              <button
                 onClick={() => setShowSearchModal(true)}
                 className="text-gray-300 hover:text-white transition-colors"
               >
                 <Search className="h-5 w-5" />
               </button>
               <div className="relative">
-                <button 
+                <button
                   onClick={() => setShowNotifications(!showNotifications)}
                   className="text-gray-300 hover:text-white relative transition-colors"
                 >
@@ -166,7 +155,7 @@ const DashboardPage: React.FC = () => {
 
       {/* Modals */}
       {showSearchModal && <SearchModal onClose={() => setShowSearchModal(false)} />}
-      
+
       <FloatingChat />
     </div>
   );

@@ -16,7 +16,7 @@ const ContentLibraryView: React.FC = () => {
   const [expandedSections, setExpandedSections] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(!contextPlan);
   const [currentView, setCurrentView] = useState<'library' | 'topic' | 'quiz'>('library');
-  const [selectedTopic, setSelectedTopic] = useState<{courseTitle: string, topicTitle: string}>({courseTitle: '', topicTitle: ''});
+  const [selectedTopic, setSelectedTopic] = useState<{ courseTitle: string, topicTitle: string }>({ courseTitle: '', topicTitle: '' });
 
   useEffect(() => {
     if (!contextPlan) {
@@ -44,7 +44,7 @@ const ContentLibraryView: React.FC = () => {
           // } else {
           //   console.error('Failed to fetch learning plan:', data.error);
           // }
-          
+
           // Using mock API for now
           const response = await getLearningPlan();
           if (response.success) {
@@ -139,7 +139,7 @@ const ContentLibraryView: React.FC = () => {
             <div className="flex items-center">
               <div className="w-2 h-8 bg-lime-500 mr-4"></div>
               <h1 className="text-2xl font-bold text-white">
-                Your Custom Learning Plan
+                Your Personalized Learning Plan
               </h1>
             </div>
           </div>
@@ -187,7 +187,7 @@ const ContentLibraryView: React.FC = () => {
                 <div
                   className="flex items-center justify-between"
                 >
-                  <div 
+                  <div
                     className="flex items-center cursor-pointer flex-1"
                     onClick={() => toggleSection(index)}
                   >
@@ -212,8 +212,8 @@ const ContentLibraryView: React.FC = () => {
                 {expandedSections.includes(index) && (
                   <div className="mt-4 ml-8 space-y-3">
                     {week.tasks.map((task, taskIndex) => (
-                      <div 
-                        key={taskIndex} 
+                      <div
+                        key={taskIndex}
                         className="flex items-center cursor-pointer hover:bg-gray-700 p-2 rounded transition-colors"
                         onClick={() => handleTaskClick(week.title, task)}
                       >

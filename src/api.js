@@ -172,9 +172,9 @@ const DUMMY_USER = {
 
 const DUMMY_NEW_USER = {
   id: 2,
-  email: 'newuser@example.com',
-  name: 'Jane Smith',
-  initials: 'JS',
+  email: 'anirudh@example.com',
+  name: 'Anirudh Sharma',
+  initials: 'AS',
   hasCompletedUserInfo: false,
   progress: {
     completed: 0,
@@ -195,7 +195,7 @@ export const loginUser = async (email, password) => {
         success: true,
         userData: DUMMY_USER
       };
-    } else if (email === 'newuser@example.com') {
+    } else if (email === 'anirudh@example.com') {
       // New user without user info
       return {
         success: true,

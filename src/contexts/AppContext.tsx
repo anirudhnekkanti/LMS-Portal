@@ -65,7 +65,7 @@ interface AppProviderProps {
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [learningPlan, setLearningPlan] = useState<LearningPlan[] | null>(null);
-  const [currentView, setCurrentView] = useState('home');
+  const [currentView, setCurrentView] = useState('personalized-learning');
 
   const login = (userData: User) => {
     setUser(userData);
@@ -74,7 +74,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const logout = () => {
     setUser(null);
     setLearningPlan(null);
-    setCurrentView('home');
+    setCurrentView('personalized-learning');
   };
 
   const completeOnboarding = (data: OnboardingData, plan: LearningPlan[]) => {

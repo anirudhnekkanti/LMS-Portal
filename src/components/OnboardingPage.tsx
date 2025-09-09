@@ -13,7 +13,7 @@ const OnboardingPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     const onboardingData = {
       yearsExperience,
       currentTechStack,
@@ -39,7 +39,7 @@ const OnboardingPage: React.FC = () => {
       // } else {
       //   console.error('Failed to submit onboarding:', data.error);
       // }
-      
+
       // Using mock API for now
       const response = await submitOnboarding(onboardingData);
       if (response.success) {
@@ -78,7 +78,7 @@ const OnboardingPage: React.FC = () => {
 
           <div>
             <label htmlFor="currentTech" className="block text-sm font-medium text-gray-300 mb-3">
-              Current Tech Stack
+              Current Experience with Technologies
             </label>
             <textarea
               id="currentTech"
