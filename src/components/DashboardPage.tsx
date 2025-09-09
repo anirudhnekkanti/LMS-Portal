@@ -53,7 +53,7 @@ const DashboardPage: React.FC = () => {
               <img
                 src="src/util/syfAgent logo.png"
                 alt="syfAgent Logo"
-                className="w-8 h-8 rounded-lg object-cover"
+                className="w-14 h-14 rounded-lg object-cover"
               />
               <span className="ml-3 text-white font-bold">syfAgent</span>
             </div>
