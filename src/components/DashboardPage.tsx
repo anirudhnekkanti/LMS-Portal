@@ -55,7 +55,7 @@ const DashboardPage: React.FC = () => {
                 alt="syfAgent Logo"
                 className="w-14 h-14 rounded-lg object-cover"
               />
-              <span className="ml-3 text-white font-bold">syfAgent</span>
+              <span className="ml-3 text-white font-bold">syfDragon</span>
             </div>
           </div>
           <div className="flex-1 flex flex-col overflow-y-auto">
